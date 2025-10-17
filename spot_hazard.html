@@ -17,7 +17,6 @@
     }
     #gameCanvas {
         border: 2px solid #333;
-        background-color: #000;
         cursor: crosshair;
         max-width: 100%;
         height: auto;
@@ -41,75 +40,16 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const foundCounter = document.getElementById('found');
 
-// Background image
+// Load correct background image
 const bg = new Image();
-bg.src = 'background.jpg'; // Replace with your image
+bg.src = 'bog.png'; // <-- Correct image name
 bg.onload = () => {
     ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 }
 
-// Hazard data: array of objects with x, y, radius, and found status
+// Hazard data: x, y coordinates and radius
 const hazards = [
-    {x: 300, y: 150, radius: 30, found: false},
-    {x: 800, y: 400, radius: 30, found: false},
-    {x: 1500, y: 200, radius: 30, found: false},
-    {x: 1000, y: 800, radius: 30, found: false},
-    {x: 400, y: 700, radius: 30, found: false},
-    {x: 1700, y: 900, radius: 30, found: false},
-    {x: 1200, y: 500, radius: 30, found: false},
-];
+    {x: 300, y: 150, radius: 3
 
-// Scale factor for responsive display
-function getScale() {
-    return canvas.clientWidth / canvas.width;
-}
-
-// Check if click is inside a hazard
-function checkHazard(x, y) {
-    const scale = getScale();
-    const scaledX = x / scale;
-    const scaledY = y / scale;
-
-    hazards.forEach(h => {
-        if (!h.found) {
-            const dx = scaledX - h.x;
-            const dy = scaledY - h.y;
-            if (Math.sqrt(dx*dx + dy*dy) <= h.radius) {
-                h.found = true;
-                drawCircle(h.x, h.y, h.radius);
-                updateCounter();
-            }
-        }
-    });
-}
-
-// Draw a green circle over a found hazard
-function drawCircle(x, y, radius) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'lime';
-    ctx.lineWidth = 5;
-    ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    ctx.stroke();
-}
-
-// Update hazard counter
-function updateCounter() {
-    const found = hazards.filter(h => h.found).length;
-    foundCounter.textContent = found;
-    if (found === hazards.length) {
-        setTimeout(() => alert('Congratulations! You found all hazards!'), 100);
-    }
-}
-
-// Handle clicks
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    checkHazard(x, y);
-});
-</script>
-</body>
-</html>
 
 
