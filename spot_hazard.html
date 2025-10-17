@@ -35,21 +35,71 @@
 </div>
 
 <script>
-// Canvas and context
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const foundCounter = document.getElementById('found');
 
-// Load correct background image
 const bg = new Image();
-bg.src = 'bog.png'; // <-- Correct image name
+bg.src = 'bog.png';
 bg.onload = () => {
     ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 }
 
-// Hazard data: x, y coordinates and radius
+// Hazard positions with individual click radius
 const hazards = [
-    {x: 300, y: 150, radius: 3
+    {x: 245, y: 180, radius: 40, found: false},   // hazard 1
+    {x: 790, y: 410, radius: 50, found: false},   // hazard 2
+    {x: 1550, y: 220, radius: 35, found: false},  // hazard 3
+    {x: 1010, y: 780, radius: 45, found: false},  // hazard 4
+    {x: 410, y: 700, radius: 50, found: false},   // hazard 5
+    {x: 1720, y: 910, radius: 40, found: false},  // hazard 6
+    {x: 1230, y: 510, radius: 45, found: false}   // hazard 7
+];
 
+function getScale() {
+    return canvas.clientWidth / canvas.width;
+}
 
+function drawCircle(x, y, radius) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'lime';
+    ctx.lineWidth = 5;
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+}
 
+function updateCounter() {
+    const found = hazards.filter(h => h.found).length;
+    foundCounter.textContent = found;
+    if (found === hazards.length) {
+        setTimeout(() => alert('Congratulations! You found all hazards!'), 100);
+    }
+}
+
+function checkHazard(x, y) {
+    const scale = getScale();
+    const scaledX = x / scale;
+    const scaledY = y / scale;
+
+    hazards.forEach(h => {
+        if (!h.found) {
+            const dx = scaledX - h.x;
+            const dy = scaledY - h.y;
+            if (Math.sqrt(dx*dx + dy*dy) <= h.radius) {
+                h.found = true;
+                drawCircle(h.x, h.y, h.radius);
+                updateCounter();
+            }
+        }
+    });
+}
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    checkHazard(x, y);
+});
+</script>
+</body>
+</html>
